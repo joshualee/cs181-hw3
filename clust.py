@@ -52,14 +52,49 @@ def printOutput(data, numExamples):
     for instance in data[:numExamples]:
         print ','.join([str(x) for x in instance])
 
-def graph(xaxis, yaxis, title="Title", xlabel="X Axis", ylabel="Y Axis"):
+def graph(xaxis, yaxis, title="Title", xlabel="X Axis", ylabel="Y Axis", display=False):
   plt.clf()
   plt.plot(xaxis, yaxis)
   plt.title(title)
   plt.xlabel(xlabel)
   plt.ylabel(ylabel)
   savefig(title + ".pdf") # save the figure to a file
-  plt.show() # show the figure
+  if display: plt.show() # show the figure
+
+def do_kmeans(data, display=False):
+  kmeans_performances = []
+  kmeans_range = range(2, 11)
+  for k in kmeans_range:
+    prototypes, performance = kmeans.kmeans(k, data[:1000])
+    kmeans_performances.append(performance)
+    
+  graph(kmeans_range, kmeans_performances,
+    title="K-Means Performance",
+    xlabel="K",
+    ylabel="Mean Squared Error",
+    display=display
+  )
+
+def do_hac(data):
+  min_hac = HAC(data[:100], 4, cmin, name="Min")
+  min_hac.hac()
+  min_hac.print_table()
+  min_hac.scatter_plot()
+
+  max_hac = HAC(data[:100], 4, cmax, name="Max")
+  max_hac.hac()
+  max_hac.print_table()
+  max_hac.scatter_plot()
+    
+  mean_hac = HAC(data[:200], 4, cmean, name="Mean")
+  mean_hac.hac()
+  mean_hac.print_table()
+  mean_hac.scatter_plot()
+    
+  cent_hac = HAC(data[:200], 4, ccent, name="Centroid")
+  cent_hac.hac()
+  cent_hac.print_table()
+  cent_hac.scatter_plot()
 
 # main
 # ----
@@ -89,30 +124,18 @@ def main():
 
     dataset.close()
     printOutput(data,numExamples)
+    
+    # ---
+    # K-Means
+    # ---
+    
+    # do_kmeans(data)
+    
+    # ---
+    # HAC
+    # ---
 
-    # ==================== #
-    # Our Code Start       #
-    # ==================== #
-
-    # kmeans_performances = []
-    # kmeans_range = range(2, 11)
-    # for k in kmeans_range:
-      # prototypes, performance = kmeans.kmeans(k, data[:1000])
-      # kmeans_performances.append(performance)
-
-    # graph(kmeans_range, kmeans_performances,
-      # title="K-Means Performance",
-      # xlabel="K",
-      # ylabel="Mean Squared Error"
-    # )
-
-    min_hac = HAC(data[:100], 4, cmin)
-    min_hac.hac()
-    min_hac.print_table()
-
-    max_hac = HAC(data[:100], 4, cmax)
-    max_hac.hac()
-    max_hac.print_table()
+    # do_hac(data)
 
 if __name__ == "__main__":
     validateInput()

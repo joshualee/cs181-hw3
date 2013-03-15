@@ -17,11 +17,12 @@ class Cluster:
         return Cluster(cluster1.points + cluster2.points)
 
 class HAC:
-    def __init__(self, data, k, fn):
+    def __init__(self, data, k, fn, name="HAC Cluster"):
         self.k = k
         self.clusters = map(lambda d: Cluster([d[:]]), data)
         self.distance_function = fn
         self.distances = {}
+        self.name = name
 
     def merge_closest_cluster(self):
         '''
@@ -56,43 +57,43 @@ class HAC:
 
     def hac(self):
         while len(self.clusters) > self.k:
-            print len(self.clusters)
             self.merge_closest_cluster()
 
-        return self.clusters
-
-    def print_table(self):
+    def print_table(self, display=False):
+        title = "HAC Table | " + self.name
         plt.figure()
-        col_labels=["Number of instances"]
-        row_labels=[]
-        table_vals = []
-        for index, cluster in enumerate(self.clusters):
-            row_labels.append("Cluster {0}".format(index))
-            table_vals.append([len(cluster.points)])
-
-        # the rectangle is where I want to place the table
+        
+        cells = map(lambda c: [len(c.points)], self.clusters)
+        rows = map(lambda i: "Cluster {0}".format(i), range(1, len(self.clusters)+1))
         the_table = plt.table(
-                          cellText=table_vals,
-                          colWidths = [0.1]*3,
-                          rowLabels=row_labels,
-                          colLabels=col_labels,
-                          loc='center right')
-        plt.text(12,3.4,'Table Title',size=8)
-        plt.show()
+          cellText=cells,
+          colWidths=[0.2],
+          rowLabels=rows,
+          colLabels=["# Instances"],
+          loc="center"
+        )
+        
+        plt.text(0, 0, title, size=20)
+        
+        plt.savefig(title + ".pdf")
+        if display: plt.show()
 
-    def scatter_plot(self, title="HAC Clusters"):
-      colors = ["#4682B4", "#008080", "#6A5ACD", "#FA8072"]
-      fig = mpl.plt.figure()
+    def scatter_plot(self, display=False):
+      title = "HAC Scatter Plot | " + self.name
+      
+      colors = ["#5AA2E0", "#EB4949", "#49EB61", "#ECF238"]
+      fig = mpl.pyplot.figure()
       ax = fig.add_subplot(111, projection='3d')
-      for c in self.clusters:
+      for i, c in enumerate(self.clusters):
         xs = map(lambda p: p[0], c.points)
         ys = map(lambda p: p[1], c.points)
         zs = map(lambda p: p[2], c.points)
         ax.scatter(xs, ys, zs, c=colors[i])
 
-      mpl.plt.title(title)
+      mpl.pyplot.title(title)
       ax.set_xlabel('X')
       ax.set_ylabel('Y')
       ax.set_zlabel('Z')
-      savefig(title + ".pdf")
-      mpl.plt.show()
+      plt.savefig(title + ".pdf")
+      
+      if display: mpl.pyplot.show()
