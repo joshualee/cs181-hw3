@@ -12,8 +12,9 @@ import random
 # our code
 import kmeans
 from hac import *
+import autoclass
 
-DATAFILE = "adults-small.txt"
+DATAFILE = "adults.txt"
 
 #validateInput()
 
@@ -96,6 +97,9 @@ def do_hac(data):
   cent_hac.print_table()
   cent_hac.scatter_plot()
 
+def do_autoclass(data):
+  autoclass.autoclass(data[:1000], 4)
+
 # main
 # ----
 # The main program loop
@@ -136,6 +140,12 @@ def main():
     # ---
 
     # do_hac(data)
+    
+    # ---
+    # Autoclass
+    # ---
+
+    do_autoclass(data)
 
 if __name__ == "__main__":
     validateInput()

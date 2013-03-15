@@ -3,18 +3,19 @@ import random
 def discrete_data(data):
   for datum in data:
     for i, value in enumerate(datum):
-      datum[i] = 1 if value >= 0.5 else 0
+      datum[i] = 1.0 if value >= 0.5 else 0.0
   return data
 
-def autoclass(data):
+def autoclass(data, K):
   data = discrete_data(data[:])
-  dimensions = len(data[0])
-  N = len(data)
+  N = float(len(data))
+  D = len(data[0])
   
   # Initialize probabilities
-  t_c = random.uniform(0, 1)
-  t_1 = [1.0/dimensions] * dimensions
-  t_0 = [1.0/dimensions] * dimensions
+  pi = [1.0/K] * K
+  theta = [[random.uniform(0, 1) for d in range(D)] for k in range(K)]
+  p = [0.0] * K
+  p_x_n = [0.0] * K
   
   epsilon = 0.00001 # for convergence
   converged = False
@@ -24,30 +25,31 @@ def autoclass(data):
     iterations += 1
     print "iteration {0}".format(iterations)
     
-    e_n1 = 0.0
-    e_d1 = [0.0] * dimensions
-    e_d0 = [0.0] * dimensions
+    E_N = [0.0] * K
+    E_N1 = [[0] * D for k in range(K)]
     
-    for i, x_n in enumerate(data):
-      p_1 = t_c
-      p_0 = (1 - t_c)
-      for d in range(dimensions):
-        p_1 *= pow(t_1[d], x_n[d]) * pow(1 - t_1[d], 1 - x_n[d])
-        p_0 *= pow(t_0[d], x_n[d]) * pow(1 - t_0[d], 1 - x_n[d])
+    for x_n in data:
+      for k in range(K):
+        p[k] = pi[k]
+        for d in range(D):
+          p[k] *= pow(theta[k][d], x_n[d]) * pow(1 - theta[k][d], 1 - x_n[d])
+      
+      for k in range(K):
+        p_x_n[k] = p[k] / sum(p)
+        E_N[k] += p_x_n[k]
+      
+      for d in range(D):
+          if x_n[d] == 1:
+            for k in range(K):
+              E_N1[k][d] += p_x_n[k]
         
-      p_x_n = p_1 / (p_1 + p_0)
-      e_n1 += p_x_n
-      
-      for d in range(dimensions):
-        if x_n[d] == 1:
-          e_d1[d] = p_x_n
-          e_d0[d] = (1 - p_x_n)
-      
     # Maximization Step
-    old_t_c = t_c
-    t_c = e_n1 / N
-    
-    converged = abs(old_t_c - t_c) <= epsilon
-    for d in range(dimensions):
-      t_1[d] = e_d1[d] / e_n1
-      t_0[d] = e_d0[d] / (N - e_n1)
+    converged = True
+    for k in range(K):
+      old = pi[k]
+      pi[k] = E_N[k] / N
+      converged &= abs(old-pi[k]) <= epsilon
+      for d in range(D):
+        old = theta[k][d]
+        theta[k][d] = E_N1[k][d] / E_N[k]
+        converged &= abs(old-pi[k]) <= epsilon
