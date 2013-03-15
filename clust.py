@@ -5,6 +5,8 @@
 # for graphing
 import matplotlib.pyplot as plt
 from pylab import *
+from scipy.stats import beta
+import numpy as np
 
 # python library
 import sys
@@ -63,6 +65,16 @@ def graph(xaxis, yaxis, title="Title", xlabel="X Axis", ylabel="Y Axis", display
   plt.ylabel(ylabel)
   savefig(title + ".pdf") # save the figure to a file
   if display: plt.show() # show the figure
+
+def do_beta(display=False):
+  a, b = 1, 1
+  rv = beta(a, b)
+  x = np.linspace(0, np.minimum(rv.dist.b, 3))
+  h = plt.plot(x, rv.pdf(x))
+  title = "Beta({0}, {1}) PDF".format(a, b)
+  plt.title(title)
+  savefig(title + ".pdf")
+  if display: plt.show()
 
 def do_kmeans(data, display=False):
   kmeans_performances = []
@@ -150,7 +162,7 @@ def main():
     # K-Means
     # ---
     
-    do_kmeans(data)
+    # do_kmeans(data)
     
     # ---
     # HAC
@@ -163,6 +175,8 @@ def main():
     # ---
 
     # do_autoclass(data)
+    
+    do_beta()
 
 if __name__ == "__main__":
     validateInput()
