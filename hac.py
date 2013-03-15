@@ -63,12 +63,12 @@ class HAC:
 
     def print_table(self):
         plt.figure()
-        col_labels=["Cluster", "Number of instances"]
+        col_labels=["Number of instances"]
         row_labels=[]
         table_vals = []
         for index, cluster in enumerate(self.clusters):
-            row_labels.appned("Cluster {0}".format(index))
-            table_vals.append(len(cluster.points))
+            row_labels.append("Cluster {0}".format(index))
+            table_vals.append([len(cluster.points)])
 
         # the rectangle is where I want to place the table
         the_table = plt.table(
