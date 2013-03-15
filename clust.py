@@ -59,20 +59,20 @@ def main():
     numExamples = int(sys.argv[2])
 
     #Initialize the random seed
-    
+
     random.seed()
 
     #Initialize the data
 
-    
+
     dataset = file(DATAFILE, "r")
     if dataset == None:
         print "Unable to open data file"
 
 
     data = parseInput(dataset)
-    
-    
+
+
     dataset.close()
     printOutput(data,numExamples)
 
