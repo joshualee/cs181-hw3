@@ -63,18 +63,21 @@ class HAC:
 
     def print_table(self):
         plt.figure()
-        col_labels=['col1','col2','col3']
-        row_labels=['row1','row2','row3']
-        table_vals=[[11,12,13],[21,22,23],[31,32,33]]
+        col_labels=["Cluster", "Number of instances"]
+        row_labels=[]
+        table_vals = []
+        for index, cluster in enumerate(self.clusters):
+            row_labels.appned("Cluster {0}".format(index))
+            table_vals.append(len(cluster.points))
 
         # the rectangle is where I want to place the table
-        the_table = plt.table(cellText=table_vals,
+        the_table = plt.table(
+                          cellText=table_vals,
                           colWidths = [0.1]*3,
                           rowLabels=row_labels,
                           colLabels=col_labels,
                           loc='center right')
         plt.text(12,3.4,'Table Title',size=8)
-
         plt.show()
 
     def scatter_plot(self, title="HAC Clusters"):
