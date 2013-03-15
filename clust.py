@@ -106,7 +106,6 @@ def main():
       # ylabel="Mean Squared Error"
     # )
 
-
     min_hac = HAC(data[:100], 4, cmin)
     min_hac.hac()
     min_hac.print_table()

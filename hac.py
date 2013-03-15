@@ -4,6 +4,8 @@
 from utils import *
 import pylab as plt
 import matplotlib as mpl
+import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
 
 class Cluster:
 
@@ -60,7 +62,6 @@ class HAC:
         return self.clusters
 
     def print_table(self):
-
         plt.figure()
         col_labels=['col1','col2','col3']
         row_labels=['row1','row2','row3']
@@ -76,14 +77,19 @@ class HAC:
 
         plt.show()
 
-        '''
-        mpl.rc('text', usetex=True)
-        plt.figure()
-        num_instances = map(lambda c: len(c.points), self.clusters)
-        table = r"\begin{tabular}{ c } & Number of instances \\\hline"
-        for i in range(len(self.clusters)):
-            table += "Cluster {0} & {1} \\\hline".format(i, num_instances[i])
-        table += "end{tabular}"
-        plt.text(0,0,table,size=12)
-        plt.show()
-        '''
+    def scatter_plot(self, title="HAC Clusters"):
+      colors = ["#4682B4", "#008080", "#6A5ACD", "#FA8072"]
+      fig = mpl.plt.figure()
+      ax = fig.add_subplot(111, projection='3d')
+      for c in self.clusters:
+        xs = map(lambda p: p[0], c.points)
+        ys = map(lambda p: p[1], c.points)
+        zs = map(lambda p: p[2], c.points)
+        ax.scatter(xs, ys, zs, c=colors[i])
+
+      mpl.plt.title(title)
+      ax.set_xlabel('X')
+      ax.set_ylabel('Y')
+      ax.set_zlabel('Z')
+      savefig(title + ".pdf")
+      mpl.plt.show()
