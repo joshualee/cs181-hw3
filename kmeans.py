@@ -30,8 +30,7 @@ def kmeans(k, data):
   data = Data.generate_from_data(data)
   
   converged = False
-  epsilon = 0.0 # convergence criterion
-  iterations = 0  
+  epsilon = 0.0 # convergence criterion 
   while not converged:
     # ---
     # 1. update responsibility to nearest prototype
