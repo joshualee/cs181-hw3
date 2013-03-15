@@ -2,6 +2,7 @@ import random
 import math
 from math import log
 from clust import graph
+import time
 
 def discrete_data(data):
   for datum in data:
@@ -65,9 +66,25 @@ def autoclass(data, K):
     likelihood = log_likelihood(data, pi, theta, K, D)
     likelihoods.append(likelihood)
     converged = abs(old_likelihood - likelihood) <= epsilon
-    print "{0}: {1}".format(iterations, likelihood)
-    
-  graph(range(iterations), likelihoods, title="Autoclass Likelihood", xlabel="Iterations", ylabel="Likelihood", display=False)
+    # print "{0}: {1}".format(iterations, likelihood)
+  
+  # graph(range(iterations), likelihoods, title="Autoclass Likelihood", xlabel="Iterations", ylabel="Likelihood", display=False)
+  return likelihood
+
+def extra_credit(data):
+  autoclass_range = range(2, 11)
+  likelihoods = []
+  run_times = []
+  for k in autoclass_range:
+    start_time = time.time()
+    likelihoods.append(autoclass(data, k))
+    end_time = time.time()
+    run_time = end_time - start_time
+    print "Run time: {0} secs".format(run_time)
+    run_times.append(run_time)
+  print run_times
+  graph(autoclass_range, run_times, title="Autoclass Run Time For Varying K", xlabel="K", ylabel="Run-time (s)", display=False)
+  # graph(autoclass_range, likelihoods, title="Autoclass Max Likelihood For Varying K", xlabel="K", ylabel="Maximum Likelihood", display=False)
 
 def log_likelihood(data, pi, theta, K, D):
   likelihood = 0.0
@@ -86,4 +103,3 @@ def log_likelihood(data, pi, theta, K, D):
       outer_sum += pow(math.e, log(pi[k]) + inner_sum)
     likelihood += log(outer_sum)
   return likelihood
-        

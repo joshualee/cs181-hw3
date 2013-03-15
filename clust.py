@@ -6,8 +6,10 @@
 import matplotlib.pyplot as plt
 from pylab import *
 
+# python library
 import sys
 import random
+import time
 
 # our code
 import kmeans
@@ -64,9 +66,15 @@ def graph(xaxis, yaxis, title="Title", xlabel="X Axis", ylabel="Y Axis", display
 
 def do_kmeans(data, display=False):
   kmeans_performances = []
+  kmeans_run_times = []
   kmeans_range = range(2, 11)
   for k in kmeans_range:
+    start_time = time.time()
     prototypes, performance = kmeans.kmeans(k, data[:1000])
+    end_time = time.time()
+    run_time = end_time - start_time
+    kmeans_run_times.append(run_time)
+    # print "Run time {0}: {1} secs".format(k, run_time)
     kmeans_performances.append(performance)
     
   graph(kmeans_range, kmeans_performances,
@@ -75,6 +83,14 @@ def do_kmeans(data, display=False):
     ylabel="Mean Squared Error",
     display=display
   )
+  
+  # print kmeans_run_times
+  # graph(kmeans_range, kmeans_run_times,
+  #   title="K-Means Run Time",
+  #   xlabel="K",
+  #   ylabel="Run-time (s)",
+  #   display=display
+  # )
 
 def do_hac(data):
   min_hac = HAC(data[:100], 4, cmin, name="Min")
@@ -99,6 +115,7 @@ def do_hac(data):
 
 def do_autoclass(data):
   autoclass.autoclass(data[:1000], 4)
+  # autoclass.extra_credit(data[:1000])
 
 # main
 # ----
@@ -133,7 +150,7 @@ def main():
     # K-Means
     # ---
     
-    # do_kmeans(data)
+    do_kmeans(data)
     
     # ---
     # HAC
@@ -145,7 +162,7 @@ def main():
     # Autoclass
     # ---
 
-    do_autoclass(data)
+    # do_autoclass(data)
 
 if __name__ == "__main__":
     validateInput()
