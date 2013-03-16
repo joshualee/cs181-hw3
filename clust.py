@@ -162,21 +162,21 @@ def main():
     # K-Means
     # ---
     
-    # do_kmeans(data)
+    do_kmeans(data)
     
     # ---
     # HAC
     # ---
 
-    # do_hac(data)
+    do_hac(data)
     
     # ---
     # Autoclass
     # ---
 
-    # do_autoclass(data)
+    do_autoclass(data)
     
-    do_beta()
+    # do_beta()
 
 if __name__ == "__main__":
     validateInput()

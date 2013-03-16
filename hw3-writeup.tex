@@ -1,0 +1,133 @@
+\documentclass[12pt]{article}
+\usepackage{geometry}
+\geometry{letterpaper}
+\usepackage{latexsym}
+\usepackage{amssymb,amsmath}
+\usepackage[pdftex]{graphicx}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{fullpage}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage[noend]{algorithmic}
+\restylefloat{table}
+
+\setlength{\parindent}{0cm}
+
+\newcommand{\bs}{\boldsymbol} 
+
+\oddsidemargin = -.2in \evensidemargin = -.2in
+\topmargin = -0.1in \textwidth=6.7in \textheight=8.8in
+\begin{document}
+
+\begin{center}
+\large
+\textbf{Computer Science 181} \\
+\medskip
+
+Joshua Lee\\
+Homework 3\\
+March 15, 2013\end{center}
+
+% a
+Saying that the maximum distance between any two dimensions is at most epsilon is equivalent to saying that the difference between all dimensions must be less than epsilon. Since we know $\boldsymbol{x}$ is placed in the center and $\varepsilon\in(0, 1/2)$, we know that all $\boldsymbol{y}$'s must fall into the range $(1/2-\varepsilon, 1/2+\varepsilon)$. Since $\boldsymbol{y}$'s are placed uniform randomly, the probability is proportional to length:
+
+$$
+p(\max_m|x_m-y_m|\le\varepsilon) = \prod_{m \in M} p(|x_m-y_m| \le \varepsilon) = (2\varepsilon)^M
+$$
+
+%b
+The window you want the dimensions of $\boldsymbol{y}$'s is always at most $2\varepsilon$. This is maximal and true for all dimensions when $\boldsymbol{x}$ is placed at the center of the hyper cube. Now that $\boldsymbol{x}$ is being placied randomly, if some of the dimensions of $\boldsymbol{x}$ get close to the edge of the hypercube (i.e. close to 0 or 1), then the window the corresponding $\boldsymbol{y}$ dimension can fall into is smaller than $2\varepsilon$, therefore the probability is less. \\
+
+%c
+
+We have already shown that $p(\max_m|x_m-y_m|\le\varepsilon) \le (2\varepsilon)^M)$. Note that $||\bs{x}-\bs{y}|| \ge \max_m|x_m-y_m|$. This is obvious because the square root of the sum of the squared differences between all dimensions is clearly greater than the maximum difference between any one dimension. Therefore, we know that $||\bs{x}-\bs{y}||$ must have a SMALLER probability than $\max_m|x_m-y_m|$ of being less than $\varepsilon$, precisely because $||\bs{x}-\bs{y}|| \ge \max_m|x_m-y_m|$. Therefore, $p(||\bs{x}-\bs{y}|| \le \epsilon) \le (2\varepsilon)^M$ \\
+
+%d
+Let $p = (2\varepsilon)^M$. Using our result from (c), the probability that a single point will be greater than $\varepsilon$ away from $\bs{x}$ at least $(1-p)$. So, the probability all $N$ points are greater than $\varepsilon$ away from $\bs{x}$ at least $(1-p)^N$. Therefore the probability that at least 1 point is at most $\varepsilon$ away from $\bs{x}$ is $1 - (1-p)^N$. So we have that $1 - (1-p)^N \ge 1-\delta$. \\
+
+%e
+Rearranging the inequality from (d), we have that:
+
+$$
+N \ge \frac{\ln(\delta)}{\ln(1-(2\varepsilon)^M)}
+$$
+
+This means that to have at least probability $(1-\delta)$ of having 2 points be less than $\varepsilon$ apart, we need at least $N$ points, which increases as $M$ increases! Thus, as we have higher dimension data, we need more data to have the same probability of datum to be close to each other. This is the mathematical formulation of what we termed the ``Curse of Dimensionality" in lecture.
+
+
+%%%%%
+\pagebreak
+
+\textbf{Maximum Likelihood (ML)} \\
+
+$\theta_{\text{ML}} = \text{arg}\max\limits_{\theta} Pr(\mathcal{D} | \theta) $ (e.g. $\frac{N_1}{N}$ in the case of Bernoulli) \\
+
+\textbf{Maximum a posteriori (MAP)} \\
+
+$\theta_{\text{MAP}} = \text{arg}\max\limits_{\theta} Pr(\mathcal{D} | \theta) Pr(\Theta = \theta)$ where $Pr(\Theta = \theta)$ is our prior. \\ (e.g. $\frac{\alpha+N_1-1}{\alpha + \beta + N - 2}$ in the case of Bernoulli). \\
+
+\textbf{Full Bayesian (FB)} \\
+
+$Pr(\boldsymbol{x}|\mathcal{D}) = \int_{\boldsymbol{\Theta}} Pr(\boldsymbol{x} | \boldsymbol{\theta})Pr(\boldsymbol{\theta}|\mathcal{D})d\boldsymbol{\theta}$ \\
+
+Using each method's respective $\theta$'s, we can then calculate $Pr(\boldsymbol{x}|\mathcal{D})$ using the model distribution we choose. For example, in the case we choose to model using a Bernoulli distribution, we have that $Pr(\boldsymbol{x}|\mathcal{D}) = \theta$.
+
+%%%%%%
+\pagebreak
+
+Let $Pr(w_4 | \theta)$ be the probability the Harvard football team wins the fourth game of the 2012-13 season, given the parameters $\theta$. We use the Bernoulli distribution as our model distribution.\\
+
+\textbf{2011-12 record}: 9 wins - 1 loss \\
+\textbf{2012-13 record}: 3 wins - 0 losses  (first three games) \\
+
+\textbf{Maximum Likelihood (ML)} \\
+
+For ML, we do not use a prior, so we ignore the data from the 2011 - 12 season.
+
+Using the data from the 2012 - 2013 season:
+$$
+N = 3, \; N_1 = 3, \; N_0 = 0, \; \theta_{\text{ML}} = \frac{N_1}{N} = 1
+$$
+
+Therefore, $Pr(w_4 | \theta_{\text{ML}}) = \theta_{\text{ML}}^{w_4}(1-\theta_{\text{ML}})^{(1-w_4)} = 1^{w_4} = 1$ \\
+
+\indent \textbf{Solution:} $Pr(w_4 | \theta_{\text{ML}}) = 1$\\
+
+\textbf{Maximum a posteriori (MAP)} \\
+
+For MAP, we use the prior distribution: 
+$$Pr(\Theta=\theta) = \text{Beta}(\Theta=\theta |\alpha, \beta) = \frac{1}{Z}\theta^{\alpha-1}(1-\theta)^{\beta-1}$$ 
+
+where $Z = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha+\beta)}$ (normalizing constant) and $\alpha=9, \beta=1$ (using the 2011-12 season data). \\
+
+Now we want to update our prior based on the data, giving us:
+$$Pr(\Theta=\theta | \mathcal{D}) = \text{Beta}(\Theta=\theta | 9 + N_1, 1 + N - N_1) = \text{Beta}(\Theta=\theta | 12, 1)$$
+
+since Beta is the conjugate prior of the Bernoulli and we have $N_1 = 3, N = 3$. So:
+$$
+\theta_{\text{MAP}} = \frac{\alpha + N_1 - 1}{\alpha + \beta + N - 2} = \frac{9 + 3 - 1}{9 + 1 + 3 - 2} = 1
+$$
+
+Therefore, $Pr(w_4 | \theta_{\text{MAP}}) = \theta_{\text{MAP}}^{w_4}(1-\theta_{\text{MAP}})^{(1-w_4)} = 1^{w_4} = 1$ \\
+
+\indent \textbf{Solution:} $Pr(w_4 | \theta_{\text{MAP}}) = 1$\\
+
+\pagebreak
+
+\textbf{Full Bayesian (FB)} \\
+
+Again we use the prior $\Pr(\boldsymbol{\theta}) = \text{Beta}(\boldsymbol{\theta} | 9,1)$ and posterior $\Pr(\boldsymbol{\theta} | \mathcal{D}) = \text{Beta}(\boldsymbol{\theta} | 12,1)$ we calculated above. \\
+
+Using the FB method where we now consider the distribution over all possible parameter values, we have:
+
+$$
+\theta_{\text{BF}} = \int^1_0 Pr(w_4 | \theta) Pr(\theta|\mathcal{D})d\theta = \frac{\alpha + N_1}{\alpha+\beta+N} = \frac{9+3}{9+1+3} = \frac{12}{13}
+$$
+
+Therefore, $Pr(w_4 | \theta_{\text{BF}}) = \theta_{\text{BF}}^{w_4}(1-\theta_{\text{BF}})^{(1-w_4)} = \frac{12}{13}^{w_4}\frac{1}{13}^{(1-w_4)}$ \\
+
+\indent \textbf{Solution:} $Pr(w_4 | \theta_{\text{BF}}) = \frac{12}{13}^{w_4}\frac{1}{13}^{(1-w_4)}$\\
+
+\end{document}
+
